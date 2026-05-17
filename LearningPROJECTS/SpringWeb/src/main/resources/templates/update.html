@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Todo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 400px;
+            margin: 60px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #ffc107;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #e0a800;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .back a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>✏️ Update Todo</h1>
+
+    <form th:action="@{/todos}">
+
+        <!-- ID must be hidden (never editable) -->
+        <input type="hidden" name="id" th:value="${item.id}">
+
+        <input type="text"
+               name="title"
+               placeholder="Title"
+               th:value="${item.title}"
+               required>
+
+        <input type="text"
+               name="desc"
+               placeholder="Description"
+               th:value="${item.desc}">
+
+        <button type="submit">Update</button>
+    </form>
+
+    <div class="back">
+        <a th:href="@{/}">← Back to list</a>
+    </div>
+</div>
+
+</body>
+</html>

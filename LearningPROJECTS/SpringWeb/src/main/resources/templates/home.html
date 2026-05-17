@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple To-Do App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 To-Do List</h1>
+
+    <!-- Add Task -->
+    <form action="/todos" class="todo-form">
+        <input type="text" name="title" placeholder="Enter task title" required>
+        <input type="text" name="desc" placeholder="Enter description">
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Task List (will be rendered by backend or later JS) -->
+    <div class="todo-list">
+        <div class="todo-item" th:each="item : ${items}">
+            <h3 th:text="${item.title}">Sample Task</h3>
+            <p th:text="${item.desc}">This is just a placeholder</p>
+            <div class="actions">
+                <form th:action="@{/update}">
+                    <button class="update" name="id" th:value="${item.id}">Update</button>
+                </form>
+                <form th:action="@{/delete}">
+                    <button class="delete" name="id" th:value="${item.id}">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

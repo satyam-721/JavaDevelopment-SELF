@@ -1,0 +1,43 @@
+
+<!--Defines the bean tag -->
+<!--Creates all the object which is mentioned with bean tag-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- this is actually creating the object in container-->
+    <bean id="employee" class="com.satyam.Employee"/>
+
+    <!--scope is bydefault is singleton, in prototype a new object is created when i say getBean-->
+    <!--also in prototype the object will only be created when i say getBean unlike in singleton when container is loaded-->
+    <bean id="employee2" class="com.satyam.Employee" scope="prototype"/>
+
+
+    <!--It will create the object (calls constructor)-->
+    <bean class="com.satyam.Employee"/>
+
+
+    <!--               INJECTIONS          -->
+
+        <!-- setting a value of primitive var and object-->
+    <bean id="employee3" class="com.satyam.Employee">
+        <!-- These both is calling a setter method(setAge(int var)) -->
+        <property name="age" value="20"/>
+
+        <!--for object type need setter also-->
+        <property name="lap" ref="lap1"/>
+    </bean>
+
+        <!--Constructor Injection-->
+    <bean id="lap1" class="com.satyam.Laptop">
+        <!-- 2 times called means I am passing 2 arguments in cons -->
+        <constructor-arg value="23"/>
+        <constructor-arg value="satyam"/>
+        <!-- bby default the first one will go as first argument followed by another -->
+        <!--we can use type="datatype" attribute to look for the type in parameter along this there are also 3 attributes to proper assign-->
+
+    </bean>
+
+</beans>

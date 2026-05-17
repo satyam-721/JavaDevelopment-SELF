@@ -1,0 +1,31 @@
+
+<!--Defines the bean tag -->
+<!--Creates all the object which is mentioned with bean tag-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+
+<!--    Auto wire will link the bean ref to a property automatically, without property tag
+        - ByName: if the name of property and a bean tag is same it will wired
+        - Bytype: checks for type (there should be unique type for this property-->
+    <bean name="edu" class="com.satyam.Education" autowire="byType">
+<!--        <property name="sch" ref="tr"/>-->
+
+        <!-- if i explicitly mention a property here then this tag will have more priority than autowire-->
+
+    </bean>
+
+     <!-- create constructor when object is called first time-->
+    <bean name="sch" class="com.satyam.Teacher" lazy-init="true"/>
+    <bean name="tr" class="com.satyam.Student" primary="true"/>
+    <!-- in case of conflict this primary keywork has the highest priority to select -->
+
+
+
+
+
+</beans>
