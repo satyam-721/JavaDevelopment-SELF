@@ -28,11 +28,16 @@ public class JobService {
 
 
     public List<JobPost> getAllJobs(){
+
+        //bypasses proxy
+        display();
         return repo.findAll();
     }
 
-    public JobPost getJob(int i) {
-        return repo.findById(i).orElse(new JobPost());
+    public JobPost getJob(int postId) {
+
+        int a=10/postId;
+        return repo.findById(postId).orElse(new JobPost());
     }
 
     public void updateJob(JobPost job) {
@@ -51,5 +56,10 @@ public class JobService {
     public List<JobPost> search(String keyword) {
         return repo.findBySkillreqContainingOrJobidContaining(keyword,keyword);
 
+    }
+
+
+    public void display(){
+        System.out.println("Displaying all Jobs");
     }
 }
