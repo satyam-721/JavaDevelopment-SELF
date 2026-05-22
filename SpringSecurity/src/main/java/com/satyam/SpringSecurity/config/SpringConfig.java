@@ -10,9 +10,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-/*
+
+
+@Configuration
+@EnableWebSecurity
+public class SpringConfig {
+
+
+    /*
  |--------------------------------------------------------------------------
  | Spring Security Configuration
  |--------------------------------------------------------------------------
@@ -36,9 +47,6 @@ import org.springframework.security.web.SecurityFilterChain;
  |
  */
 
-@Configuration
-@EnableWebSecurity
-public class SpringConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -74,7 +82,7 @@ public class SpringConfig {
             .formLogin(Customizer.withDefaults())
 
             // HTTP Basic Authentication
-            .httpBasic(Customizer.withDefaults())
+            .httpBasic(Customizer.withDefaults());
 
             /*
              | Session Management
@@ -85,37 +93,53 @@ public class SpringConfig {
              | - Commonly used in REST APIs with JWT
              |
              */
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
+//            .sessionManagement(session ->
+//                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//            );
 
         return http.build();
     }
 
-    //same thing without lambdaa
-    public SecurityFilterChain withoutLambda(HttpSecurity http){
-
-        Customizer<CsrfConfigurer<HttpSecurity>> custCsrf = new Customizer<CsrfConfigurer<HttpSecurity>>() {
-            @Override
-            public void customize(CsrfConfigurer<HttpSecurity> configure) {
-                configure.disable();
-            }
-        };
-
-        http.csrf(custCsrf);
 
 
-        Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> custHttp = new Customizer<AuthorizeHttpRequestsConfigurer<org.springframework.security.config.annotation.web.builders.HttpSecurity>.AuthorizationManagerRequestMatcherRegistry>() {
-            @Override
-            public void customize(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
-                      registry.anyRequest().authenticated();
-            }
-        };
+    /*
+ |
+ |  This method provides User Data
+ |
+ | Important Notes:
+ |
+ | 1. InMemoryUserDetailsManager stores users in config, no database required
+ |
+ | 2. user defined in application properties will be override
+ |
+ | 3. This is used in
+        - custom users
+        - multiple users
+        - roles
+        - different credentials
+ |
+ */
 
-        http.authorizeHttpRequests(custHttp);
+    @Bean
+    public UserDetailsService userDetailsService(){
 
+        UserDetails user1 = User.withDefaultPasswordEncoder()
+                .username("satyam721")
+                .password("1234")
+                .roles("ADMIN")
+                .build();
 
-        return http.build();
+        UserDetails user2 = User.withDefaultPasswordEncoder()
+                .username("sagar")
+                .password("12345")
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user1,user2);
 
     }
+
+
+
+
 }
