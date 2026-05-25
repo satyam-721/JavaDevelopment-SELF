@@ -1,18 +1,21 @@
 package com.satyam.SpringSecurity.config;
 
+import com.satyam.SpringSecurity.service.MyUserdetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -23,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringConfig {
 
 
-    /*
+    /**
  |--------------------------------------------------------------------------
  | Spring Security Configuration
  |--------------------------------------------------------------------------
@@ -45,7 +48,7 @@ public class SpringConfig {
  |      - Enables HTTP Basic Authentication
  |      - Makes the application stateless
  |
- */
+ **/
 
 
     @Bean
@@ -53,7 +56,7 @@ public class SpringConfig {
 
         http
 
-            /*
+            /**
              | CSRF Configuration
              |
              | CSRF is mainly needed for browser-based session authentication.
@@ -62,7 +65,7 @@ public class SpringConfig {
              */
             .csrf(csrf -> csrf.disable())
 
-            /*
+            /**
              | Authorization Rules
              |
              | Every incoming request must be authenticated.
@@ -72,7 +75,7 @@ public class SpringConfig {
                     auth.anyRequest().authenticated()
             )
 
-            /*
+            /**
              |--------------------------------------------------------------------------
              | Authentication Methods
              |--------------------------------------------------------------------------
@@ -84,7 +87,7 @@ public class SpringConfig {
             // HTTP Basic Authentication
             .httpBasic(Customizer.withDefaults());
 
-            /*
+            /**
              | Session Management
              |
              | STATELESS means:
@@ -102,7 +105,9 @@ public class SpringConfig {
 
 
 
-    /*
+//    @Bean
+
+    /**
  |
  |  This method provides User Data
  |
@@ -120,26 +125,39 @@ public class SpringConfig {
  |
  */
 
+//    public UserDetailsService userDetailsService(){
+//
+//        UserDetails user1 = User.withDefaultPasswordEncoder()
+//                .username("satyam721")
+//                .password("1234")
+//                .roles("ADMIN")
+//                .build();
+//
+//        UserDetails user2 = User.withDefaultPasswordEncoder()
+//                .username("sagar")
+//                .password("12345")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user1,user2);
+//
+//    }
+
+
+    @Autowired
+    UserDetailsService userdetailsService;   //MyUserdetailsService.java
+
     @Bean
-    public UserDetailsService userDetailsService(){
 
-        UserDetails user1 = User.withDefaultPasswordEncoder()
-                .username("satyam721")
-                .password("1234")
-                .roles("ADMIN")
-                .build();
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userdetailsService);
 
-        UserDetails user2 = User.withDefaultPasswordEncoder()
-                .username("sagar")
-                .password("12345")
-                .roles("USER")
-                .build();
+        //no password encoder
+//        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
 
-        return new InMemoryUserDetailsManager(user1,user2);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
 
+        return provider;
     }
-
-
-
 
 }
