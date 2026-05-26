@@ -22,7 +22,7 @@ public class MyUserdetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = repo.findByUsername(username);
-
+        System.out.println("user verified");
 
         if (user == null){
             System.out.println("404: "+username+" Not found");

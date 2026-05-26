@@ -72,7 +72,7 @@ public class SpringConfig {
              |
              */
             .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("register")
+                    auth.requestMatchers("/register")
                                     .permitAll()
                             .anyRequest().authenticated()
             )
