@@ -21,7 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -30,6 +30,26 @@ public class SpringConfig {
 
     @Autowired
     UserDetailsService userdetailsService;
+
+    @Autowired
+    JwtFilter jwtFilter;
+
+
+    /**     SecurityFilterChain
+     Request
+     ↓
+     CorsFilter
+     ↓
+     CsrfFilter
+     ↓
+     JwtFilter
+     ↓
+     UsernamePasswordAuthenticationFilter
+     ↓
+     AuthorizationFilter
+     ↓
+     Controller
+     */
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,7 +66,10 @@ public class SpringConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+
+                //Adding a new Filter Before:
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -62,6 +85,8 @@ public class SpringConfig {
         return provider;
     }
 
+
+    //for login
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
