@@ -78,6 +78,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 /**  Spring Security still does NOT know user is authenticated internally.  */
 
+                System.out.println(userDetails.getAuthorities());
+
                 //creating authentication Object (this is basically Authentication Object when provided these arguments)
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 

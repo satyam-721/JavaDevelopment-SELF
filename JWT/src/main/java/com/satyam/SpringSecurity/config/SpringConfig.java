@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity    //enables anotation like @pre/postAuthority @Secured
 public class SpringConfig {
 
     @Autowired
@@ -59,6 +61,7 @@ public class SpringConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register","/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")      //for ROLE_ADMIN
                         .anyRequest().authenticated()
                 )
 
